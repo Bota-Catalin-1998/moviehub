@@ -1,4 +1,5 @@
 import "dotenv/config";
+import http from "http";
 import https from "https";
 import fs from "fs";
 import path from "path";
@@ -11,12 +12,22 @@ import { connectMongo } from "./lib/mongoose.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const sslOptions = {
-  key: fs.readFileSync(path.join(__dirname, "../certs/server.key")),
-  cert: fs.readFileSync(path.join(__dirname, "../certs/server.cert"))
-};
+const PORT = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === "production";
 
-const server = https.createServer(sslOptions, app);
+let server;
+
+if (isProduction) {
+  server = http.createServer(app);
+} else {
+  const sslOptions = {
+    key: fs.readFileSync(path.join(__dirname, "../certs/server.key")),
+    cert: fs.readFileSync(path.join(__dirname, "../certs/server.cert"))
+  };
+
+  server = https.createServer(sslOptions, app);
+}
+
 const wss = new WebSocketServer({ server });
 
 setWss(wss);
@@ -29,13 +40,12 @@ wss.on("connection", (ws) => {
   });
 });
 
-const PORT = 3000;
-
 async function startServer() {
   await connectMongo();
 
   server.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on https://localhost:${PORT}`);
+    const protocol = isProduction ? "http" : "https";
+    console.log(`Server running on ${protocol}://localhost:${PORT}`);
   });
 }
 
