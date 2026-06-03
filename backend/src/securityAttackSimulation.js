@@ -1,6 +1,6 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const API_BASE_URL = "https://localhost:3000";
+const API_BASE_URL = "https://moviehub-doyw.onrender.com";
 
 async function request(path, options = {}) {
   const response = await fetch(`${API_BASE_URL}${path}`, {

@@ -15,11 +15,10 @@ const emptyForm = {
 const pageSize = 3;
 
 
-//const API_BASE_URL = "https://localhost:3000";
-//const WS_BASE_URL = "wss://localhost:3000";
 
-const API_BASE_URL = "https://172.20.10.4:3000";
-const WS_BASE_URL = "wss://172.20.10.4:3000";
+
+const API_BASE_URL = "https://moviehub-doyw.onrender.com";
+const WS_BASE_URL = "wss://moviehub-doyw.onrender.com";
 
 
 

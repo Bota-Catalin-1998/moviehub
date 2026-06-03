@@ -33,7 +33,7 @@ test("simulate suspicious user behaviour", async ({ page }) => {
 
   for (let i = 0; i < 4; i++) {
     await page.evaluate(async () => {
-      await fetch("https://localhost:3000/auth/login/verify-otp", {
+      await fetch("https://moviehub-doyw.onrender.com/auth/login/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -50,7 +50,7 @@ test("simulate suspicious user behaviour", async ({ page }) => {
   // Detectorul tot va ajunge HIGH datorită login + OTP + request frequency.
   for (let i = 0; i < 3; i++) {
     await page.evaluate(async (tokenValue) => {
-      await fetch("https://localhost:3000/performance/actors-naive", {
+      await fetch("https://moviehub-doyw.onrender.com/performance/actors-naive", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${tokenValue}`
