@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import ChatBox from "./ChatBox";
+import ChatBox from "./Chatbox";
 import AdminPanel from "./AdminPanel";
 
 const emptyForm = {
