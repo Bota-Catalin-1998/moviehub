@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id          Int          @id @default(autoincrement())
+  title       String
+  genre       String
+  releaseYear Int
+  rating      Float
+  status      String
+  description String
+  imageUrl    String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  movieActors MovieActor[]
+
+  @@index([genre])
+  @@index([status])
+  @@index([rating])
+}
+
+model Actor {
+  id          Int          @id @default(autoincrement())
+  name        String
+  country     String
+  birthYear   Int
+  movieActors MovieActor[]
+
+  @@index([name])
+  @@index([country])
+}
+
+model MovieActor {
+  id      Int   @id @default(autoincrement())
+  movieId Int
+  actorId Int
+
+  movie   Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  actor   Actor @relation(fields: [actorId], references: [id], onDelete: Cascade)
+
+  @@unique([movieId, actorId])
+  @@index([movieId])
+  @@index([actorId])
+}
+
+model User {
+  id                Int               @id @default(autoincrement())
+  name              String
+  email             String            @unique
+  password          String
+  roleId            Int
+  role              Role              @relation(fields: [roleId], references: [id])
+  actionLogs        ActionLog[]
+  observationEntry  ObservationUser?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+model Role {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  users           User[]
+  rolePermissions RolePermission[]
+}
+
+model Permission {
+  id              Int              @id @default(autoincrement())
+  name            String           @unique
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  id           Int        @id @default(autoincrement())
+  roleId       Int
+  permissionId Int
+
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@unique([roleId, permissionId])
+}
+
+model ActionLog {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id])
+  groupId           String
+  actionInformation String
+  createdAt         DateTime @default(now())
+}
+
+model ObservationUser {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @unique
+  user             User     @relation(fields: [userId], references: [id])
+  reason           String
+  incidentCount    Int      @default(1)
+  lastIncidentAt   DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}

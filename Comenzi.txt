@@ -1,0 +1,5 @@
+npm run dev
+npm test -- --run
+npm run coverage 
+npx playwright test 
+npx playwright show-report
